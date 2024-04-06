@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Correction</title>
+  </head>
+  <body>
+    <textarea id="inputText" rows="4" cols="50"></textarea><br />
+    <button onclick="correctText()">Correct Text</button>
+    <p id="outputText"></p>
+    <script src="dictionary.js"></script>
+    <script>
+      function correctText() {
+        let incorrectText = document.getElementById("inputText").value;
+        let correctedText = "";
+
+        for (let i = 0; i < incorrectText.length; i++) {
+          let currentSymbol = incorrectText[i];
+          let correctedSymbol = allSymbolsDictionary[currentSymbol];
+          if (correctedSymbol !== undefined) {
+            correctedText += correctedSymbol;
+          } else {
+            correctedText += currentSymbol;
+          }
+        }
+
+        document.getElementById("outputText").textContent = correctedText;
+      }
+    </script>
+  </body>
+</html>
