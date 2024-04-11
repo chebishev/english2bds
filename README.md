@@ -8,5 +8,4 @@ Examples: \
 "Iskam towa da e na kirilica" -> Phonetic -> "Искам това да е на кирилица"
 ---------------------
 It depends what Bulgarian layout you were using before accidently to switch to English \
-![Image](meme.jpg) \
-You can use the dictionaries / associative arrays from the .js files
+![Image](meme.jpg)
