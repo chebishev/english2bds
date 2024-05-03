@@ -37,7 +37,10 @@
           scriptTag.onload = function () {
               document.getElementById('result').innerHTML = 'Loaded: ' + filename;
           };
-
+          
+          if (document.head.childElementCount > 7) {
+            document.head.removeChild(document.head.lastChild);
+          }
           document.head.appendChild(scriptTag);
       }
   </script>
