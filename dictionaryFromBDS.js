@@ -1,4 +1,4 @@
-const allSymbolsDictionary = {
+window.allSymbolsDictionary = {
     "a": "ь",
     "b": "ф",
     "c": "ъ",

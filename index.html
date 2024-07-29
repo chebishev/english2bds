@@ -1,55 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>Revert to Cyrillic</title>
-  </head>
-  <body>
-    <h1>Translate random English text to Bulgarian</h1>
-    <h6>If you accidently write something with English keyboard layout this tool will convert your text to Bulgarian</h6>
-    <h3>I wanted to write in: </h3>
-    <label>
-      <input type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)"> BDS/Typewriter
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>Revert to Cyrillic</title>
+</head>
+<body>
+  <h1>Translate random English text to Bulgarian</h1>
+  <h5>If you accidentally write something with an English keyboard layout, this tool will convert your text to Bulgarian.</h5>
+  <p>Clicking "Correct Text" button will convert your text to Bulgarian and copy it to your clipboard</p>
+  <h3>I wanted to write in: </h3>
+  <label>
+    <input id="bds" type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)"> BDS/Typewriter
   </label>
   <label>
-      <input type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)"> Phonetic Traditional
+    <input id="bgp" type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)"> Phonetic Traditional
   </label>
   <br>
-    <textarea
-      id="inputText"
-      rows="4"
-      cols="50"
-      placeholder="Enter text to transliterate to Bulgarian cyrillic"
-    ></textarea
-    ><br />
-    <button class="btn-primary btn" onclick="correctText()">Correct Text</button>
-    <p id="outputText"></p>
-    <script>
-      function loadScript(filename) {
-          var scriptTag = document.createElement('script');
-          scriptTag.src = filename;
+  <textarea id="inputText" rows="4" cols="50" placeholder="Enter text to transliterate to Bulgarian cyrillic"></textarea>
+  <br>
+  <button class="btn-primary btn" onclick="correctText()">Correct Text</button>
+  <br>
+  <!-- Show which script is loaded -->
+  <!-- <p id="result"></p> -->
 
-          scriptTag.onload = function () {
-              document.getElementById('result').innerHTML = 'Loaded: ' + filename;
-          };
+  <script>
+    window.allSymbolsDictionary = {};
 
-          document.head.appendChild(scriptTag);
-      }
-  </script>
-    
-    <script>
-      function correctText() {
+    async function loadScript(filename) {
+      return new Promise((resolve, reject) => {
+        let existingScript = document.getElementById("dictionary");
+        if (existingScript) {
+          document.head.removeChild(existingScript);
+        }
+
+        let scriptTag = document.createElement('script');
+        scriptTag.setAttribute("id", "dictionary");
+        scriptTag.src = filename;
+
+        scriptTag.onload = () => {
+          // document.getElementById('result').innerHTML = 'Loaded: ' + filename;
+          resolve();
+        };
+
+        scriptTag.onerror = () => {
+          reject(new Error('Failed to load script: ' + filename));
+        };
+
+        document.head.appendChild(scriptTag);
+      });
+    }
+
+    async function correctText() {
+      try {
+        const selectedRadio = document.querySelector('input[name="jsFile"]:checked');
+        if (selectedRadio) {
+          await loadScript(selectedRadio.value);
+        }
+
         let incorrectText = document.getElementById("inputText").value;
         let correctedText = "";
 
         for (let i = 0; i < incorrectText.length; i++) {
           let currentSymbol = incorrectText[i];
-          let correctedSymbol = allSymbolsDictionary[currentSymbol];
+          let correctedSymbol = window.allSymbolsDictionary[currentSymbol];
           if (correctedSymbol !== undefined) {
             correctedText += correctedSymbol;
           } else {
@@ -57,11 +75,16 @@
           }
         }
 
-        document.getElementById("outputText").textContent = correctedText;
+        await navigator.clipboard.writeText(correctedText);
+        alert("Copied the text: " + correctedText);
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred: ' + error.message);
       }
-    </script>
-  </body>
-  <footer>
-    <p>Made by <a href="https://github.com/chebishev">chebishev</a></p>
-  </footer>
+    }
+  </script>
+</body>
+<footer>
+  <p>Made by <a href="https://github.com/chebishev">chebishev</a></p>
+</footer>
 </html>
