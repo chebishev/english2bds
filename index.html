@@ -76,7 +76,7 @@
         }
 
         await navigator.clipboard.writeText(correctedText);
-        alert("Copied the text: " + correctedText);
+        alert("Your text: " + correctedText + " has been copied to your clipboard");
       } catch (error) {
         console.error(error);
         alert('An error occurred: ' + error.message);
