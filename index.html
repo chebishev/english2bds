@@ -42,26 +42,16 @@
         scriptTag.setAttribute("id", "dictionary");
         scriptTag.src = filename;
 
-        scriptTag.onload = () => {
-          // document.getElementById('result').innerHTML = 'Loaded: ' + filename;
-          resolve();
-        };
+          scriptTag.onload = function () {
+              document.getElementById('result').innerHTML = 'Loaded: ' + filename;
+          };
 
-        scriptTag.onerror = () => {
-          reject(new Error('Failed to load script: ' + filename));
-        };
-
-        document.head.appendChild(scriptTag);
-      });
-    }
-
-    async function correctText() {
-      try {
-        const selectedRadio = document.querySelector('input[name="jsFile"]:checked');
-        if (selectedRadio) {
-          await loadScript(selectedRadio.value);
-        }
-
+          document.head.appendChild(scriptTag);
+      }
+  </script>
+    
+    <script>
+      function correctText() {
         let incorrectText = document.getElementById("inputText").value;
         let correctedText = "";
 
