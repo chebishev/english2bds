@@ -25,7 +25,7 @@
   <br>
   <button class="btn-primary btn" onclick="correctText()">Correct Text</button>
   <br>
-  <!-- Show which script is loaded -->
+  <!-- Test which script is loaded -->
   <!-- <p id="result"></p> -->
 
   <script>
@@ -42,16 +42,26 @@
         scriptTag.setAttribute("id", "dictionary");
         scriptTag.src = filename;
 
-          scriptTag.onload = function () {
-              document.getElementById('result').innerHTML = 'Loaded: ' + filename;
-          };
+        scriptTag.onload = () => {
+          // document.getElementById('result').innerHTML = 'Loaded: ' + filename;
+          resolve();
+        };
 
-          document.head.appendChild(scriptTag);
-      }
-  </script>
-    
-    <script>
-      function correctText() {
+        scriptTag.onerror = () => {
+          reject(new Error('Failed to load script: ' + filename));
+        };
+
+        document.head.appendChild(scriptTag);
+      });
+    }
+
+    async function correctText() {
+      try {
+        const selectedRadio = document.querySelector('input[name="jsFile"]:checked');
+        if (selectedRadio) {
+          await loadScript(selectedRadio.value);
+        }
+
         let incorrectText = document.getElementById("inputText").value;
         let correctedText = "";
 
