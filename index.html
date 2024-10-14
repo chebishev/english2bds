@@ -1,94 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <title>Revert to Cyrillic</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Revert to Cyrillic</title>
 </head>
 <body>
-  <h1>Translate random English text to Bulgarian</h1>
+<!--  <h1>Translate random English text to Bulgarian</h1>-->
+<h1>Връщане на текст случайно написан на латиница към кирилица</h1>
 <!--  <h5>If you accidentally write something with an English keyboard layout, this tool will convert your text to Bulgarian.</h5>-->
-  <h5>Ако случайно напишете нещо на латиница вместо на кирилица, чрез този инструмент ще обърнете вашия текст във вида, в който искате</h5>
+<h5>Ако случайно напишете нещо на латиница вместо на кирилица, чрез този инструмент ще обърнете вашия текст във вида, в
+    който искате</h5>
 <!--  <p>Clicking "Correct Text" button will convert your text to Bulgarian and copy it to your clipboard</p>-->
-  <p>Натискането на бутона "Коригиране на текста" ще конвертира вашия текст към кирилица и ще го копира в клипборда</p>
+<p>Натискането на бутона "Коригиране на текста" ще конвертира вашия текст към кирилица и ще го копира в клипборда</p>
 <!--  <h3>I wanted to write in: </h3>-->
-  <h3>Исках да пиша на: </h3>
-  <label>
-    <input id="bds" type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)"> BDS/Typewriter
-  </label>
-  <label>
-    <input id="bgp" type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)"> Phonetic Traditional
-  </label>
-  <br>
-  <textarea id="inputText" rows="4" cols="50" placeholder="Enter text to transliterate to Bulgarian cyrillic"></textarea>
-  <br>
+<h3>Исках да пиша на: </h3>
+<!--  <label>-->
+<!--    <input id="bds" type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)"> BDS/Typewriter-->
+<!--  </label>-->
+<label>
+    <input id="bds" type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)">
+    БДС/Машинопис
+</label>
+<!--  <label>-->
+<!--    <input id="bgp" type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)"> Phonetic Traditional-->
+<!--  </label>-->
+<label>
+    <input id="bgp" type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)">
+    Традиционна фонетична
+</label>
+<br>
+<!--  <textarea id="inputText" rows="4" cols="50" placeholder="Enter text to transliterate to Bulgarian cyrillic"></textarea>-->
+<textarea id="inputText" rows="4" cols="50" placeholder="Въведете текст за транслитерация към кирилица"></textarea>
+<br>
 <!--  <button class="btn-primary btn" onclick="correctText()">Correct Text</button>-->
-  <button class="btn-primary btn" onclick="correctText()">Коригиране на текста</button>
-  <br>
-  <!-- Test which script is loaded -->
-  <!-- <p id="result"></p> -->
+<button class="btn-primary btn" onclick="correctText()">Коригиране на текста</button>
+<br>
+<!-- Test which script is loaded -->
+<!-- <p id="result"></p> -->
 
-  <script>
+<script>
     window.allSymbolsDictionary = {};
 
     async function loadScript(filename) {
-      return new Promise((resolve, reject) => {
-        let existingScript = document.getElementById("dictionary");
-        if (existingScript) {
-          document.head.removeChild(existingScript);
-        }
+        return new Promise((resolve, reject) => {
+            let existingScript = document.getElementById("dictionary");
+            if (existingScript) {
+                document.head.removeChild(existingScript);
+            }
 
-        let scriptTag = document.createElement('script');
-        scriptTag.setAttribute("id", "dictionary");
-        scriptTag.src = filename;
+            let scriptTag = document.createElement('script');
+            scriptTag.setAttribute("id", "dictionary");
+            scriptTag.src = filename;
 
-        scriptTag.onload = () => {
-          // document.getElementById('result').innerHTML = 'Loaded: ' + filename;
-          resolve();
-        };
+            scriptTag.onload = () => {
+                // document.getElementById('result').innerHTML = 'Loaded: ' + filename;
+                resolve();
+            };
 
-        scriptTag.onerror = () => {
-          reject(new Error('Failed to load script: ' + filename));
-        };
+            scriptTag.onerror = () => {
+                reject(new Error('Failed to load script: ' + filename));
+            };
 
-        document.head.appendChild(scriptTag);
-      });
+            document.head.appendChild(scriptTag);
+        });
     }
 
     async function correctText() {
-      try {
-        const selectedRadio = document.querySelector('input[name="jsFile"]:checked');
-        if (selectedRadio) {
-          await loadScript(selectedRadio.value);
+        try {
+            const selectedRadio = document.querySelector('input[name="jsFile"]:checked');
+            if (selectedRadio) {
+                await loadScript(selectedRadio.value);
+            }
+
+            let incorrectText = document.getElementById("inputText").value;
+            let correctedText = "";
+
+            for (let i = 0; i < incorrectText.length; i++) {
+                let currentSymbol = incorrectText[i];
+                let correctedSymbol = window.allSymbolsDictionary[currentSymbol];
+                if (correctedSymbol !== undefined) {
+                    correctedText += correctedSymbol;
+                } else {
+                    correctedText += currentSymbol;
+                }
+            }
+
+            await navigator.clipboard.writeText(correctedText);
+            // alert("Your text: " + correctedText + " has been copied to your clipboard");
+            alert("Вашият текст: " + correctedText + " е успешно копиран");
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred: ' + error.message);
         }
-
-        let incorrectText = document.getElementById("inputText").value;
-        let correctedText = "";
-
-        for (let i = 0; i < incorrectText.length; i++) {
-          let currentSymbol = incorrectText[i];
-          let correctedSymbol = window.allSymbolsDictionary[currentSymbol];
-          if (correctedSymbol !== undefined) {
-            correctedText += correctedSymbol;
-          } else {
-            correctedText += currentSymbol;
-          }
-        }
-
-        await navigator.clipboard.writeText(correctedText);
-        alert("Your text: " + correctedText + " has been copied to your clipboard");
-      } catch (error) {
-        console.error(error);
-        alert('An error occurred: ' + error.message);
-      }
     }
-  </script>
+</script>
 </body>
 <footer>
-  <p>Made by <a href="https://github.com/chebishev">chebishev</a></p>
+    <p>Made by <a href="https://github.com/chebishev">chebishev</a></p>
 </footer>
 </html>
