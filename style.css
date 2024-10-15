@@ -12,7 +12,9 @@ body {
     background-color: rgb(218, 225, 228);
     text-align: center;
     width: 100%;
-    height: 100px;
+    min-height: calc(100vh - 50px); /* Full height minus footer */
+    padding-bottom: 50px; /* Space for footer */
+    position: relative; /* Ensure relative positioning for children */
 }
 
 h1, h3 {
@@ -27,10 +29,15 @@ label, input, textarea, button {
 footer {
     width: 100%;
     margin: auto 0;
-    position: fixed;
-    bottom: 0;
+    position: fixed; /* Keep the footer fixed */
+    bottom: 0; /* Position at the bottom */
+    left: 0; /* Align to the left */
+    background: white; /* Add a background color */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* Optional shadow for better visibility */
+    height: 50px; /* Fixed height for footer */
 }
 
 footer p {
-    padding: 5px;
+    padding: 15px;
+    margin: 0; /* Remove margin */
 }
