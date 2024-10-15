@@ -4,34 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>Bilingual Revert to Cyrillic</title>
+    <title>Revert to Cyrillic</title>
 </head>
 <body>
-    <!-- Language Switcher -->
-    <select id="languageSwitcher" class="form-control" style="width: 150px; margin-bottom: 10px;">
+    <label for="languageSwitcher"><i style="font-size:24px" class="fa">&#xf1ab;</i></label>
+    <select id="languageSwitcher" class="dropdown">
         <option value="bg">Български</option>
         <option value="en">English</option>
     </select>
 
-    <h1 data-translate="title">Трансформиране на случайно написан текст от латиница към кирилица</h1>
-    <p data-translate="description">Натискането на бутона "Коригиране на текста" ще конвертира вашия текст към кирилица и ще го копира в клипборда</p>
-    <h3 data-translate="write_in">Исках да пиша на:</h3>
+    <h1 data-translate="title"></h1>
+    <p data-translate="description"></p>
+    <h3 data-translate="write_in"></h3>
 
     <label>
         <input id="bds" type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)">
-        <span data-translate="bds">БДС/Машинопис</span>
+        <span data-translate="bds"></span>
     </label>
     <label>
         <input id="bgp" type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)">
-        <span data-translate="phonetic">Традиционна фонетична</span>
+        <span data-translate="phonetic"></span>
     </label>
     <br>
-    <textarea id="inputText" rows="4" cols="50" placeholder="Въведете текст за транслитерация към кирилица"></textarea>
+    <textarea id="inputText" rows="4" cols="50" placeholder=""></textarea>
     <br>
-    <button class="btn-primary btn" onclick="correctText()" data-translate="correct_button">Коригиране на текста</button>
+    <button class="btn-primary btn" onclick="correctText()" data-translate="correct_button"></button>
     <br>
 
     <script>
@@ -119,7 +120,7 @@
                 }
 
                 await navigator.clipboard.writeText(correctedText);
-                alert("Вашият текст: " + correctedText + " е успешно копиран");
+                alert(`Вашият текст "${correctedText}" е успешно копиран`);
             } catch (error) {
                 console.error(error);
                 alert('An error occurred: ' + error.message);
