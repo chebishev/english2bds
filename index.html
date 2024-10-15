@@ -7,95 +7,128 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>Revert to Cyrillic</title>
+    <title>Bilingual Revert to Cyrillic</title>
 </head>
 <body>
-<!--  <h1>Translate random English text to Bulgarian</h1>-->
-<h1>Трансформиране на случайно написан текст от латиница към кирилица</h1>
-<!--  <p>Clicking "Correct Text" button will convert your text to Bulgarian and copy it to your clipboard</p>-->
-<p>Натискането на бутона "Коригиране на текста" ще конвертира вашия текст към кирилица и ще го копира в клипборда</p>
-<!--  <h3>I wanted to write in: </h3>-->
-<h3>Исках да пиша на: </h3>
-<!--  <label>-->
-<!--    <input id="bds" type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)"> BDS/Typewriter-->
-<!--  </label>-->
-<label>
-    <input id="bds" type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)">
-    БДС/Машинопис
-</label>
-<!--  <label>-->
-<!--    <input id="bgp" type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)"> Phonetic Traditional-->
-<!--  </label>-->
-<label>
-    <input id="bgp" type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)">
-    Традиционна фонетична
-</label>
-<br>
-<!--  <textarea id="inputText" rows="4" cols="50" placeholder="Enter text to transliterate to Bulgarian cyrillic"></textarea>-->
-<textarea id="inputText" rows="4" cols="50" placeholder="Въведете текст за транслитерация към кирилица"></textarea>
-<br>
-<!--  <button class="btn-primary btn" onclick="correctText()">Correct Text</button>-->
-<button class="btn-primary btn" onclick="correctText()">Коригиране на текста</button>
-<br>
-<!-- Test which script is loaded -->
-<!-- <p id="result"></p> -->
+    <!-- Language Switcher -->
+    <select id="languageSwitcher" class="form-control" style="width: 150px; margin-bottom: 10px;">
+        <option value="bg">Български</option>
+        <option value="en">English</option>
+    </select>
 
-<script>
-    window.allSymbolsDictionary = {};
+    <h1 data-translate="title">Трансформиране на случайно написан текст от латиница към кирилица</h1>
+    <p data-translate="description">Натискането на бутона "Коригиране на текста" ще конвертира вашия текст към кирилица и ще го копира в клипборда</p>
+    <h3 data-translate="write_in">Исках да пиша на:</h3>
 
-    async function loadScript(filename) {
-        return new Promise((resolve, reject) => {
-            let existingScript = document.getElementById("dictionary");
-            if (existingScript) {
-                document.head.removeChild(existingScript);
+    <label>
+        <input id="bds" type="radio" name="jsFile" value="dictionaryFromBDS.js" onclick="loadScript(this.value)">
+        <span data-translate="bds">БДС/Машинопис</span>
+    </label>
+    <label>
+        <input id="bgp" type="radio" name="jsFile" value="dictionaryFromPhonetic.js" onclick="loadScript(this.value)">
+        <span data-translate="phonetic">Традиционна фонетична</span>
+    </label>
+    <br>
+    <textarea id="inputText" rows="4" cols="50" placeholder="Въведете текст за транслитерация към кирилица"></textarea>
+    <br>
+    <button class="btn-primary btn" onclick="correctText()" data-translate="correct_button">Коригиране на текста</button>
+    <br>
+
+    <script>
+        window.allSymbolsDictionary = {};
+
+        const translations = {
+            en: {
+                title: "Translate random English text to Bulgarian",
+                description: 'Clicking the "Correct Text" button will convert your text to Bulgarian and copy it to your clipboard',
+                write_in: "I wanted to write in:",
+                bds: "BDS/Typewriter",
+                phonetic: "Phonetic Traditional",
+                correct_button: "Correct Text",
+                input_placeholder: "Enter text to transliterate to Bulgarian cyrillic"
+            },
+            bg: {
+                title: "Трансформиране на случайно написан текст от латиница към кирилица",
+                description: 'Натискането на бутона "Коригиране на текста" ще конвертира вашия текст към кирилица и ще го копира в клипборда',
+                write_in: "Исках да пиша на:",
+                bds: "БДС/Машинопис",
+                phonetic: "Традиционна фонетична",
+                correct_button: "Коригиране на текста",
+                input_placeholder: "Въведете текст за транслитерация към кирилица"
             }
+        };
 
-            let scriptTag = document.createElement('script');
-            scriptTag.setAttribute("id", "dictionary");
-            scriptTag.src = filename;
+        // Function to switch language
+        function switchLanguage(lang) {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.textContent = translations[lang][key];
+            });
 
-            scriptTag.onload = () => {
-                // document.getElementById('result').innerHTML = 'Loaded: ' + filename;
-                resolve();
-            };
-
-            scriptTag.onerror = () => {
-                reject(new Error('Failed to load script: ' + filename));
-            };
-
-            document.head.appendChild(scriptTag);
-        });
-    }
-
-    async function correctText() {
-        try {
-            const selectedRadio = document.querySelector('input[name="jsFile"]:checked');
-            if (selectedRadio) {
-                await loadScript(selectedRadio.value);
-            }
-
-            let incorrectText = document.getElementById("inputText").value;
-            let correctedText = "";
-
-            for (let i = 0; i < incorrectText.length; i++) {
-                let currentSymbol = incorrectText[i];
-                let correctedSymbol = window.allSymbolsDictionary[currentSymbol];
-                if (correctedSymbol !== undefined) {
-                    correctedText += correctedSymbol;
-                } else {
-                    correctedText += currentSymbol;
-                }
-            }
-
-            await navigator.clipboard.writeText(correctedText);
-            // alert("Your text: " + correctedText + " has been copied to your clipboard");
-            alert("Вашият текст: " + correctedText + " е успешно копиран");
-        } catch (error) {
-            console.error(error);
-            alert('An error occurred: ' + error.message);
+            // Update placeholder text for textarea
+            document.getElementById('inputText').setAttribute('placeholder', translations[lang]['input_placeholder']);
         }
-    }
-</script>
+
+        document.getElementById('languageSwitcher').addEventListener('change', function() {
+            switchLanguage(this.value);
+        });
+
+        // Load dictionary script
+        async function loadScript(filename) {
+            return new Promise((resolve, reject) => {
+                let existingScript = document.getElementById("dictionary");
+                if (existingScript) {
+                    document.head.removeChild(existingScript);
+                }
+
+                let scriptTag = document.createElement('script');
+                scriptTag.setAttribute("id", "dictionary");
+                scriptTag.src = filename;
+
+                scriptTag.onload = () => {
+                    resolve();
+                };
+
+                scriptTag.onerror = () => {
+                    reject(new Error('Failed to load script: ' + filename));
+                };
+
+                document.head.appendChild(scriptTag);
+            });
+        }
+
+        // Correct text function
+        async function correctText() {
+            try {
+                const selectedRadio = document.querySelector('input[name="jsFile"]:checked');
+                if (selectedRadio) {
+                    await loadScript(selectedRadio.value);
+                }
+
+                let incorrectText = document.getElementById("inputText").value;
+                let correctedText = "";
+
+                for (let i = 0; i < incorrectText.length; i++) {
+                    let currentSymbol = incorrectText[i];
+                    let correctedSymbol = window.allSymbolsDictionary[currentSymbol];
+                    if (correctedSymbol !== undefined) {
+                        correctedText += correctedSymbol;
+                    } else {
+                        correctedText += currentSymbol;
+                    }
+                }
+
+                await navigator.clipboard.writeText(correctedText);
+                alert("Вашият текст: " + correctedText + " е успешно копиран");
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred: ' + error.message);
+            }
+        }
+
+        // Initialize the default language
+        switchLanguage('bg');
+    </script>
 </body>
 <footer>
     <p>Made by <a href="https://github.com/chebishev">chebishev</a></p>
