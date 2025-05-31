@@ -23,7 +23,7 @@ This web application helps users convert accidental English keystrokes back to B
 
 ## ⚙️ Tech Stack
 
-- Frontend: HTML/CSS/JS]
+- Frontend: HTML/CSS, W3 CSS, Bootstrap/JS]
 - Deployment: [Render](https://render.com)
 
 ## 📄 License
@@ -32,5 +32,5 @@ This web application helps users convert accidental English keystrokes back to B
 
 ## 🙋 Contact
 
-Feel free to open an issue or contact me at: [atanas.chebishev@gma.com]\
+Feel free to open an issue or contact me at: [atanas.chebishev@gmail.com]\
 ![Image](meme.jpg)
