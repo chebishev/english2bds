@@ -29,7 +29,7 @@ This web application helps users convert accidental English keystrokes back to B
 ## 📄 License
 
 [MIT License](LICENSE)\
-[favicon source]<a href="https://www.freepik.com/icon/translation_8599962#fromView=search&page=1&position=7&uuid=f318e0b9-c678-4608-ac2b-2f9912e76129">Icon by Vectoricons</a>
+<a href="https://www.freepik.com/icon/translation_8599962#fromView=search&page=1&position=7&uuid=f318e0b9-c678-4608-ac2b-2f9912e76129">Icon by Vectoricons</a>
 
 ## 🙋 Contact
 
